@@ -14,11 +14,4 @@
 	<natures>
 		<nature>org.eclipse.jdt.core.javanature</nature>
 	</natures>
-	<linkedResources>
-		<link>
-			<name>digitalLearning_DB.txt</name>
-			<type>1</type>
-			<location>C:/Users/bryan/Desktop/DigitalLearning_DB txt format.txt</location>
-		</link>
-	</linkedResources>
 </projectDescription>

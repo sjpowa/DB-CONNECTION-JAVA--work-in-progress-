@@ -13,26 +13,30 @@ public class DataSource {
 	public static final String DB_NAME = "DigitalLearning";
 	public static final String DB_USER = "user=root";
 	public static final String DB_PASSWORD = "password=root";
-	public static final String CONNECTION_STRING = "jdbc:mysql://localhost:3306/" + DB_NAME + "?" + DB_USER + "&"
-			+ DB_PASSWORD;
+	public static final String CONNECTION_STRING = 
+			"jdbc:mysql://localhost:3306/" + DB_NAME + "?" + DB_USER + "&" + DB_PASSWORD;
 
-	
-	// COLUMN INDEX => FASTER SEARCH... NO SEARCH FOR NAME MATCHING
-	// BUT THE COMPILER, WITH INDEX, JUST KNOWS WHERE TO GO!!!
+	// COLUMN INDEX => FASTER SEARCH... NAME MATCHING IS SLOWER THAN INDEX
+	// THE COMPILER, WITH INDEX SEARCH, JUST KNOWS WHERE TO GO!!!
+	// Quando crei una tabella, tutte le variabili che vai ad inserire
+	// sono indicizzate a partire dal nr.1..
+	// infatti se fai girare il programma con l'index sballato di una delle tabelle
+	// cioe' ci metti uno 0 oppure un valore > || < del column.length/ nr delle colonne (capisc a te)
+	// sara' la console a dirti: guadda ca si out of indice!!!
 	
 	public static final String TABLE_STUDENTS = "students";
 //	public static final String COLUMN_STUDENTS_ID = "id";
 //	public static final String COLUMN_STUDENTS_NAME = "name";
 //	public static final String COLUMN_STUDENTS_LASTNAME = "lastname";
 //	public static final String COLUMN_STUDENTS_SEX = "sex";
-//	public static final String COLUMN_STUDENTS_DATEOFBIRTH = "dateofbirth";
+//	public static final String COLUMN_STUDENTS_DATEOFBIRTH = "dateOfBirth";
 //	public static final String COLUMN_STUDENTS_TAXCODE = "taxCode";
-	public static final int INDEX_STUDENTS_ID = 1;
-	public static final int INDEX_STUDENTS_NAME = 2;
-	public static final int INDEX_STUDENTS_LASTNAME = 3;
-	public static final int INDEX_STUDENTS_SEX = 4;
+	public static final int INDEX_STUDENTS_ID 		   = 1;
+	public static final int INDEX_STUDENTS_NAME 	   = 2;
+	public static final int INDEX_STUDENTS_LASTNAME    = 3;
+	public static final int INDEX_STUDENTS_SEX 		   = 4;
 	public static final int INDEX_STUDENTS_DATEOFBIRTH = 5;
-	public static final int INDEX_STUDENTS_TAXCODE = 6;
+	public static final int INDEX_STUDENTS_TAXCODE 	   = 6;
 
 	public static final String TABLE_CLASSES = "classes";
 //	public static final String COLUMN_CLASSES_ID = "id";
@@ -40,11 +44,11 @@ public class DataSource {
 //	public static final String COLUMN_CLASSES_SCHOOLSUBJECT = "schoolSubject";
 //	public static final String COLUMN_CLASSES_STUDENTID = "studentId";
 //	public static final String COLUMN_CLASSES_TEACHERID = "teacherId";
-	public static final int INDEX_CLASSES_ID = 1;
-	public static final int INDEX_CLASSES_NAME = 2;
+	public static final int INDEX_CLASSES_ID 			= 1;
+	public static final int INDEX_CLASSES_NAME 			= 2;
 	public static final int INDEX_CLASSES_SCHOOLSUBJECT = 3;
-	public static final int INDEX_CLASSES_STUDENTID = 4;
-	public static final int INDEX_CLASSES_TEACHERID = 5;
+	public static final int INDEX_CLASSES_STUDENTID 	= 4;
+	public static final int INDEX_CLASSES_TEACHERID 	= 5;
 
 	public static final String TABLE_TEACHERS = "teachers";
 //	public static final String COLUMN_TEACHERS_ID = "id";
@@ -54,16 +58,16 @@ public class DataSource {
 //	public static final String COLUMN_TEACHERS_TAXCODE = "taxCode";
 //	public static final String COLUMN_TEACHERS_COMPANYNAME = "companyName";
 //	public static final String COLUMN_TEACHERS_MONTHLYSALARY = "monthlySalary";
-	public static final int INDEX_TEACHERS_ID = 1;
-	public static final int INDEX_TEACHERS_NAME = 2;
-	public static final int INDEX_TEACHERS_LASTNAME = 3;
-	public static final int INDEX_TEACHERS_DATEOFBIRTH = 4;
-	public static final int INDEX_TEACHERS_TAXCODE = 5;
-	public static final int INDEX_TEACHERS_COMPANYNAME = 6;
+	public static final int INDEX_TEACHERS_ID 			 = 1;
+	public static final int INDEX_TEACHERS_NAME 		 = 2;
+	public static final int INDEX_TEACHERS_LASTNAME 	 = 3;
+	public static final int INDEX_TEACHERS_DATEOFBIRTH 	 = 4;
+	public static final int INDEX_TEACHERS_TAXCODE 		 = 5;
+	public static final int INDEX_TEACHERS_COMPANYNAME 	 = 6;
 	public static final int INDEX_TEACHERS_MONTHLYSALARY = 7;
 	
 	public static final int ORDER_BY_NONE = 1;
-	public static final int ORDER_BY_ASC = 2;
+	public static final int ORDER_BY_ASC  = 2;
 	public static final int ORDER_BY_DESC = 3;
 
 	public static final String INNER_JOIN_STUDENTS_CLASSES_ALL = "SELECT * FROM " + TABLE_STUDENTS + " INNER JOIN "
@@ -242,5 +246,33 @@ public class DataSource {
 		}
 		
 	} // END QUERY TEACHERS
+	
+	public List<String> findTeachersForAStudent(int studentId) {
+		
+		try (Statement stmnt = conn.createStatement();
+			 ResultSet results = stmnt.executeQuery(
+//					 "select students.name from students inner join classes on students.id = classes.studentID where students.id = 11;")
+					   " select students.name, teachers.name"
+					 + " from students inner join classes on students.id = classes.studentID"
+					 + " inner join teachers on classes.teacherID = teachers.id"
+					 + " where students.id = " + studentId + ";");
+					 ) {
+			
+			List<String> all = new ArrayList<>();
+			
+			while(results.next()) {
+				all.add("\n"); // metto in colonna i valori.. dopo aver messo il print ovviamente.. senza ln
+				all.add(results.getString(1));
+				all.add(results.getString(2));
+			}
+			
+			return all;
+			
+		} catch (SQLException e) {
+			System.out.println("QUERY FAILED: " + e.getMessage());
+			return null;
+		}
+		
+	}
 	
 } // END DS CLASS

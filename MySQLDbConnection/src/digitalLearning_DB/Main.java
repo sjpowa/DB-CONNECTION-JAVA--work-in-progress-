@@ -72,6 +72,23 @@ public class Main {
 					);
 		}
 		
+		System.out.println(
+				"\n================================================================================================="
+				);
+		
+		List<String> studentTeachers = datasource.findTeachersForAStudent(11);
+		
+		System.out.println();
+		System.out.print("=================\n"
+					   + "STUDENT | TEACHER"
+					   + "\n=================");
+		for (String values : studentTeachers) {
+			System.out.print(values + "   ");
+		}
+		System.out.println("\n=================\n");
+		
+		
+		System.out.println("OPERATION COMPLETED!");
 		datasource.close();
 	}
 
