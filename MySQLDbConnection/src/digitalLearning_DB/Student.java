@@ -1,4 +1,4 @@
-package dbConnection03;
+package digitalLearning_DB;
 
 public class Student {
 
