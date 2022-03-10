@@ -10,27 +10,32 @@ import java.util.List;
 
 public class DataSource {
 
+	// qui ho voluto cambiare perche' prima non mi piaceva come veniva il collegamento
+	// lascio cmq l'alternativa
 	public static final String DB_NAME = "DigitalLearning";
-	public static final String DB_USER = "user=root";
-	public static final String DB_PASSWORD = "password=root";
-	public static final String CONNECTION_STRING = 
-			"jdbc:mysql://localhost:3306/" + DB_NAME + "?" + DB_USER + "&" + DB_PASSWORD;
+	public static final String DB_USER = "root";
+	public static final String DB_PASSWORD = "root";
+	public static final String CONNECTION_STRING = "jdbc:mysql://localhost:3306/";
+//	public static final String DB_USER = "user=root";
+//	public static final String DB_PASSWORD = "password=root";
+//	public static final String CONNECTION_STRING =
+//						"jdbc:mysql://localhost:3306/" + DB_NAME + "?" + DB_USER + "&" + DB_PASSWORD;
 
 	// COLUMN INDEX => FASTER SEARCH... NAME MATCHING IS SLOWER THAN INDEX
 	// THE COMPILER, WITH INDEX SEARCH, JUST KNOWS WHERE TO GO!!!
-	// Quando crei una tabella, tutte le variabili che vai ad inserire
+	// Quando crei una tabella, tutte i nomi delle colonne che vai ad inserire
 	// sono indicizzate a partire dal nr.1..
 	// infatti se fai girare il programma con l'index sballato di una delle tabelle
 	// cioe' ci metti uno 0 oppure un valore > || < del column.length/ nr delle colonne (capisc a te)
 	// sara' la console a dirti: guadda ca si out of indice!!!
 	
 	public static final String TABLE_STUDENTS = "students";
-//	public static final String COLUMN_STUDENTS_ID = "id";
-//	public static final String COLUMN_STUDENTS_NAME = "name";
-//	public static final String COLUMN_STUDENTS_LASTNAME = "lastname";
-//	public static final String COLUMN_STUDENTS_SEX = "sex";
-//	public static final String COLUMN_STUDENTS_DATEOFBIRTH = "dateOfBirth";
-//	public static final String COLUMN_STUDENTS_TAXCODE = "taxCode";
+	public static final String COLUMN_STUDENTS_ID = "id";
+	public static final String COLUMN_STUDENTS_NAME = "name";
+	public static final String COLUMN_STUDENTS_LASTNAME = "lastname";
+	public static final String COLUMN_STUDENTS_SEX = "sex";
+	public static final String COLUMN_STUDENTS_DATEOFBIRTH = "dateOfBirth";
+	public static final String COLUMN_STUDENTS_TAXCODE = "taxCode";
 	public static final int INDEX_STUDENTS_ID 		   = 1;
 	public static final int INDEX_STUDENTS_NAME 	   = 2;
 	public static final int INDEX_STUDENTS_LASTNAME    = 3;
@@ -39,11 +44,11 @@ public class DataSource {
 	public static final int INDEX_STUDENTS_TAXCODE 	   = 6;
 
 	public static final String TABLE_CLASSES = "classes";
-//	public static final String COLUMN_CLASSES_ID = "id";
-//	public static final String COLUMN_CLASSES_NAME = "name";
-//	public static final String COLUMN_CLASSES_SCHOOLSUBJECT = "schoolSubject";
-//	public static final String COLUMN_CLASSES_STUDENTID = "studentId";
-//	public static final String COLUMN_CLASSES_TEACHERID = "teacherId";
+	public static final String COLUMN_CLASSES_ID = "id";
+	public static final String COLUMN_CLASSES_NAME = "name";
+	public static final String COLUMN_CLASSES_SCHOOLSUBJECT = "schoolSubject";
+	public static final String COLUMN_CLASSES_STUDENTID = "studentId";
+	public static final String COLUMN_CLASSES_TEACHERID = "teacherId";
 	public static final int INDEX_CLASSES_ID 			= 1;
 	public static final int INDEX_CLASSES_NAME 			= 2;
 	public static final int INDEX_CLASSES_SCHOOLSUBJECT = 3;
@@ -51,13 +56,13 @@ public class DataSource {
 	public static final int INDEX_CLASSES_TEACHERID 	= 5;
 
 	public static final String TABLE_TEACHERS = "teachers";
-//	public static final String COLUMN_TEACHERS_ID = "id";
-//	public static final String COLUMN_TEACHERS_NAME = "name";
-//	public static final String COLUMN_TEACHERS_LASTNAME = "lastName";
-//	public static final String COLUMN_TEACHERS_DATEOFBIRTH = "dateOfBirth";
-//	public static final String COLUMN_TEACHERS_TAXCODE = "taxCode";
-//	public static final String COLUMN_TEACHERS_COMPANYNAME = "companyName";
-//	public static final String COLUMN_TEACHERS_MONTHLYSALARY = "monthlySalary";
+	public static final String COLUMN_TEACHERS_ID = "id";
+	public static final String COLUMN_TEACHERS_NAME = "name";
+	public static final String COLUMN_TEACHERS_LASTNAME = "lastName";
+	public static final String COLUMN_TEACHERS_DATEOFBIRTH = "dateOfBirth";
+	public static final String COLUMN_TEACHERS_TAXCODE = "taxCode";
+	public static final String COLUMN_TEACHERS_COMPANYNAME = "companyName";
+	public static final String COLUMN_TEACHERS_MONTHLYSALARY = "monthlySalary";
 	public static final int INDEX_TEACHERS_ID 			 = 1;
 	public static final int INDEX_TEACHERS_NAME 		 = 2;
 	public static final int INDEX_TEACHERS_LASTNAME 	 = 3;
@@ -69,19 +74,43 @@ public class DataSource {
 	public static final int ORDER_BY_NONE = 1;
 	public static final int ORDER_BY_ASC  = 2;
 	public static final int ORDER_BY_DESC = 3;
+	
+	public static final String QUERY_STUDENT_HOW_MANY_TEACHERS_HAS =
+			"SELECT " + TABLE_STUDENTS + "." + COLUMN_STUDENTS_NAME + ", COUNT("
+			+ TABLE_TEACHERS + "." + COLUMN_TEACHERS_ID + ")"
+			+ " FROM " + TABLE_STUDENTS + " INNER JOIN " + TABLE_CLASSES + " ON "
+			+ TABLE_STUDENTS + "." + COLUMN_STUDENTS_ID + " = "
+			+ TABLE_CLASSES + "." + COLUMN_CLASSES_STUDENTID + " INNER JOIN "
+			+ TABLE_TEACHERS + " ON " + TABLE_CLASSES + "." + COLUMN_CLASSES_TEACHERID
+			+ " = " + TABLE_TEACHERS + "." + COLUMN_TEACHERS_ID
+			+ " WHERE " + TABLE_STUDENTS + "." + COLUMN_STUDENTS_NAME + " = '";
+	
+//	SELECT STUDENTS.NAME, CLASSES.SCHOOLSUBJECT, TEACHERS.companyName
+//	FROM STUDENTS INNER JOIN CLASSES ON STUDENTS.ID = CLASSES.STUDENTID
+//	INNER JOIN TEACHERS ON CLASSES.TEACHERID = TEACHERS.ID;
 
-	public static final String INNER_JOIN_STUDENTS_CLASSES_ALL = "SELECT * FROM " + TABLE_STUDENTS + " INNER JOIN "
-			+ TABLE_CLASSES + " ON " + TABLE_STUDENTS + "." + INDEX_STUDENTS_ID + " ON " + TABLE_CLASSES + "."
-			+ INDEX_CLASSES_STUDENTID;
-
-//	we need to do is add an open method to
+	
+	public static final String QUERY_STUDENT_SCHOOLSUBJECT_COMPANYNAME =
+			"SELECT DISTINCT " + TABLE_STUDENTS + "." + COLUMN_STUDENTS_NAME + ", "
+			+ TABLE_CLASSES + "." + COLUMN_CLASSES_SCHOOLSUBJECT + ", "
+			+ TABLE_TEACHERS + "." + COLUMN_TEACHERS_COMPANYNAME
+			+ " FROM " + TABLE_STUDENTS + " INNER JOIN " + TABLE_CLASSES + " ON "
+			+ TABLE_STUDENTS + "." + COLUMN_STUDENTS_ID + " = "
+			+ TABLE_CLASSES + "." + COLUMN_CLASSES_STUDENTID
+			+ " INNER JOIN " + TABLE_TEACHERS + " ON "
+			+ TABLE_CLASSES + "." + COLUMN_CLASSES_TEACHERID + " = "
+			+ TABLE_TEACHERS + "." + COLUMN_TEACHERS_ID
+			+ " WHERE " + TABLE_STUDENTS + "." + COLUMN_STUDENTS_NAME + " = '";
+	
+	
+	//	we need to do is add an open method to
 //	open the database and a close method to
 //	close it so public boolean open....
 	private Connection conn;
 
 	public boolean open() { // we use this method so than in Main we can open the connection
 		try {
-			conn = DriverManager.getConnection(CONNECTION_STRING);
+			conn = DriverManager.getConnection(CONNECTION_STRING + DB_NAME, DB_USER, DB_PASSWORD);
 			System.out.println("CONNECTION ESTABLISHED\n");
 			return true;
 		} catch (SQLException e) {
@@ -99,48 +128,6 @@ public class DataSource {
 			System.out.println("CAN'T CLOSE THE CONNECTION: " + e.getMessage());
 		}
 	}
-
-//	public List<Artist> queryArtists() {
-//		
-//		Statement statement = null;
-//		ResultSet results = null;
-//		
-//		try {
-//			
-//			statement = conn.createStatement();
-//			results = statement.executeQuery("SELECT * FROM " + TABLE_ARTISTS);
-//			
-//		List<Artist> artists = new ArrayList<>();
-//		while(results.next()) {
-//			Artist artist = new Artist();
-//			artist.setId(results.getInt(COLUMN_ARTIST_ID));
-//			artist.setName(results.getString(COLUMN_ARTIST_NAME));
-//			artists.add(artist);
-//		}
-//			
-//		return artists;
-//		
-//		} catch (SQLException e) {
-//			System.out.println("QUERY FAILED: " + e.getMessage());
-//			return null;
-//		} finally {
-//			try {
-//				if (results != null) {
-//					results.close();
-//				}
-//			} catch (SQLException e) {
-//				System.out.println("ERROR CLOSING ResultSet: " + e.getMessage());
-//			}
-//			
-//			try {
-//				if (statement != null) {
-//					statement.close();
-//				}
-//			} catch (SQLException e) {
-//				System.out.println("ERROR CLOSING Statement: " + e.getMessage());
-//			}
-//		}
-//	}
 
 	public List<Student> queryStudents(int sortOrder) {
 
@@ -247,26 +234,48 @@ public class DataSource {
 		
 	} // END QUERY TEACHERS
 	
-	public List<String> findTeachersForAStudent(int studentId) {
+	public List<String> studentHowManyTeachersHas(String studentName) {
 		
 		try (Statement stmnt = conn.createStatement();
 			 ResultSet results = stmnt.executeQuery(
-//					 "select students.name from students inner join classes on students.id = classes.studentID where students.id = 11;")
-					   " select students.name, teachers.name"
-					 + " from students inner join classes on students.id = classes.studentID"
-					 + " inner join teachers on classes.teacherID = teachers.id"
-					 + " where students.id = " + studentId + ";");
+					 QUERY_STUDENT_HOW_MANY_TEACHERS_HAS + studentName + "';");
 					 ) {
 			
 			List<String> all = new ArrayList<>();
 			
 			while(results.next()) {
 				all.add("\n"); // metto in colonna i valori.. dopo aver messo il print ovviamente.. senza ln
-				all.add(results.getString(1));
-				all.add(results.getString(2));
+				all.add(results.getString(1)); // prendo valori colonna 1 => students.name
+				all.add(results.getString(2)); // prondo valori colonna 2 => COUNT(teachers.id)
 			}
 			
 			return all;
+			
+		} catch (SQLException e) {
+			System.out.println("QUERY FAILED: " + e.getMessage());
+			return null;
+		}
+		
+	} // END HOW MANY TEACHERS HAVE A STUDENT
+	
+	public List<StudentClassTeacher> studentSchoolSubjectCompanyName(String studentName) {
+		
+		try (Statement stmn = conn.createStatement();
+			 ResultSet results = stmn.executeQuery(
+					 QUERY_STUDENT_SCHOOLSUBJECT_COMPANYNAME + studentName + "';");
+				) {
+			
+			List<StudentClassTeacher> stdcltcs = new ArrayList<>();
+			
+			while(results.next()) {
+				StudentClassTeacher stdcltc = new StudentClassTeacher();
+				stdcltc.setName(results.getString(1));	// il set lo gettiamo nella prima colonna
+				stdcltc.setSchoolSubject(results.getString(2)); // il set lo gettiamo nella seconda colonna
+				stdcltc.setCompanyName(results.getString(3)); // il set lo gettiamo nella terza colonna
+				stdcltcs.add(stdcltc);
+			}
+			
+			return stdcltcs;
 			
 		} catch (SQLException e) {
 			System.out.println("QUERY FAILED: " + e.getMessage());

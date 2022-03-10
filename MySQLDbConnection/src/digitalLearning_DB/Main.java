@@ -21,11 +21,11 @@ public class Main {
 		
 		for (Student student : students) {
 			System.out.println(
-				"ID = " + student.getId()
-			+ ", NAME = " + student.getName()
+				"ID = " 	  + student.getId()
+			+ ", NAME = " 	  + student.getName()
 			+ ", LASTNAME = " + student.getLastName()
-			+ ", SEX = " + student.getSex()
-			+ ", DOB = " + student.getDateOfBirth()
+			+ ", SEX = " 	  + student.getSex()
+			+ ", DOB = " 	  + student.getDateOfBirth()
 			+ ", TAX CODE = " + student.getTaxCode()
 			);
 		}
@@ -42,16 +42,17 @@ public class Main {
 		
 		for (Class clazz : classes) {
 			System.out.println(
-					"ID = " + clazz.getId()
-				+ ", NAME = " + clazz.getName()
+					"ID = " 			+ clazz.getId()
+				+ ", NAME = " 			+ clazz.getName()
 				+ ", SCHOOL SUBJECT = " + clazz.getSchoolSubject()
-				+ ", STUDENT ID = " + clazz.getStudentID()
-				+ ", TEACHER ID = " + clazz.getTeacherID()
+				+ ", STUDENT ID = " 	+ clazz.getStudentID()
+				+ ", TEACHER ID = " 	+ clazz.getTeacherID()
 					);
 		}
 		
 		System.out.println(
-				"\n=================================================================================================\n"
+				"\n================================================="
+			  + "================================================\n"
 				);
 		
 		List<Teacher> teachers = datasource.queryTeachers();
@@ -62,12 +63,12 @@ public class Main {
 		
 		for (Teacher teacher : teachers) {
 			System.out.println(
-					"ID = " + teacher.getId()
-				+ ", NAME = " + teacher.getName() 
-				+ ", LASTNAME = " + teacher.getLastName() 
-				+ ", DOB = " + teacher.getDataOfBirth() 
-				+ ", TAX CODE = " + teacher.getTaxCode() 
-				+ ", COMPANY NAME = " + teacher.getCompanyName() 
+					"ID = " 			+ teacher.getId()
+				+ ", NAME = " 			+ teacher.getName() 
+				+ ", LASTNAME = " 		+ teacher.getLastName() 
+				+ ", DOB = " 			+ teacher.getDataOfBirth() 
+				+ ", TAX CODE = " 		+ teacher.getTaxCode() 
+				+ ", COMPANY NAME = " 	+ teacher.getCompanyName() 
 				+ ", MONTHLY SALARY = " + teacher.getMonthlySalary() 
 					);
 		}
@@ -75,21 +76,44 @@ public class Main {
 		System.out.println(
 				"\n================================================================================================="
 				);
+		List<String> studentTeachers = datasource.studentHowManyTeachersHas("lind");
+			if (studentTeachers == null) {
+				System.out.println("NO STUDENT");
+				return;
+			}
 		
-		List<String> studentTeachers = datasource.findTeachersForAStudent(11);
-		
-		System.out.println();
-		System.out.print("=================\n"
+		System.out.print(
+						 "=================\n"
 					   + "STUDENT | TEACHER"
-					   + "\n=================");
+					   + "\n================="
+					   );
+		
 		for (String values : studentTeachers) {
 			System.out.print(values + "   ");
 		}
 		System.out.println("\n=================\n");
 		
+		System.out.println(
+				"=================================================================================================\n"
+				);
 		
-		System.out.println("OPERATION COMPLETED!");
+		List<StudentClassTeacher> stdcltcs = datasource.studentSchoolSubjectCompanyName("lind");
+		if (stdcltcs == null) {
+			System.out.println("NO ELEMENTS FOUND!");
+			return;
+		}
+		
+		for (StudentClassTeacher stdcltc : stdcltcs) {
+			System.out.println(
+					  "> STUDENT: " + stdcltc.getName()
+					+ "\n> SCHOOL SUBJECT: " + stdcltc.getSchoolSubject()
+					+ "\n> COMPANY NAME: " + stdcltc.getCompanyName()
+					);
+		}
+		
+		System.out.println("\nOPERATION COMPLETED!");
 		datasource.close();
 	}
 
 }
+
