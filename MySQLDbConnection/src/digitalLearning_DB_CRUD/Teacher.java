@@ -35,6 +35,8 @@ public class Teacher extends Datasource implements CRUD_METHODS {
 				System.out.println(teacher);
 			}
 			
+			results.close();
+			stmnt.close();
 			super.close();
 		} catch (SQLException e) {
 			System.out.println("QUERY FAILED: " + e.getMessage());
@@ -100,6 +102,7 @@ public class Teacher extends Datasource implements CRUD_METHODS {
 					);
 			
 			System.out.println(">>> INSERT COMPLETED!");
+			stmnt.close();
 			super.close();
 		} catch (SQLException e) {
 			System.out.println("QUERY FAILED: " + e.getMessage());
@@ -157,18 +160,19 @@ public class Teacher extends Datasource implements CRUD_METHODS {
 			int monthlySalary = sc.nextInt();
 			
 			stmnt.execute(
-					"UPDATE TEACHERS"
+					  "UPDATE TEACHERS"
 					+ " SET name = '" + name
 					+ "', lastname = '" + lastName
 					+ "', dateofbirth = '" + dateOfBirth
 					+ "', taxcode = '" + taxCode
-					+ "', companyName = " + companyName
+					+ "', companyName = '" + companyName
 					+ "', monthlysalary = " + monthlySalary
 					+ " WHERE id = " + id
 					+ ";"
 					);
 			
 			System.out.println(">>> UPDATE COMPLETED!");
+			stmnt.close();
 			super.close();
 		} catch (SQLException e) {
 			System.out.println("QUERY FAILED: " + e.getMessage());
@@ -185,6 +189,43 @@ public class Teacher extends Datasource implements CRUD_METHODS {
 			stmnt.execute("DELETE FROM TEACHERS WHERE id = " + id);
 			
 			System.out.println(">>> DELETE COMPLETED!");
+			super.close();
+		} catch (SQLException e) {
+			System.out.println("QUERY FAILED: " + e.getMessage());
+		}
+	}
+	
+	@Override
+	public void readAll() {
+		
+		try {
+			super.open();
+			stmnt = conn.createStatement();
+			ResultSet results = stmnt.executeQuery("SELECT * FROM TEACHERS;");
+			
+			while(results.next()) {
+				String teacher = String.format(
+						  "ID: %s"
+						+ " | NAME: %s"
+						+ " | LASTNAME: %s"
+						+ " | DOB: %s"
+						+ " | TAXCODE: %s"
+						+ " | COMPANY-NAME: %s"
+						+ " | MONTHLY-SALARY: %s"
+						,
+						(results.getString(1)),
+						(results.getString(2)),
+						(results.getString(3)),
+						(results.getString(4)),
+						(results.getString(5)),
+						(results.getString(6)),
+						(results.getString(7))
+						);
+				System.out.println(teacher);
+			}
+			
+			results.close();
+			stmnt.close();
 			super.close();
 		} catch (SQLException e) {
 			System.out.println("QUERY FAILED: " + e.getMessage());

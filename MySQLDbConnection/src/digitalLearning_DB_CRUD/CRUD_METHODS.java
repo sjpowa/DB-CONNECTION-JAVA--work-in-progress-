@@ -6,5 +6,6 @@ public interface CRUD_METHODS {
 	void insert();
 	void update();
 	void delete(int id);
+	void readAll();
 	
 }

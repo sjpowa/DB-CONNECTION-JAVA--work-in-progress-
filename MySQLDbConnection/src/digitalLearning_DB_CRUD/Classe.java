@@ -33,7 +33,8 @@ public class Classe extends Datasource implements CRUD_METHODS{
 				System.out.println(classe);
 			}
 			
-			
+			results.close();
+			stmnt.close();
 			super.close();
 		} catch (SQLException e) {
 			System.out.println("QUERY FAILED: " + e.getMessage());
@@ -67,6 +68,7 @@ public class Classe extends Datasource implements CRUD_METHODS{
 					);
 			
 			System.out.println(">>> OPERATION COMPLETED!");
+			stmnt.close();
 			super.close();
 		} catch (SQLException e) {
 			System.out.println("QUERY FAILED: " + e.getMessage());
@@ -102,7 +104,7 @@ public class Classe extends Datasource implements CRUD_METHODS{
 					);
 			
 			System.out.println("\nUPDATE COMPLETED!");
-			
+			stmnt.close();
 			super.close();
 		} catch (SQLException e) {
 			System.out.println("QUERY FAILED: " + e.getMessage());
@@ -119,13 +121,45 @@ public class Classe extends Datasource implements CRUD_METHODS{
 			stmnt.execute("DELETE FROM CLASSES WHERE id = " + id);
 			
 			System.out.println(">>> DELETE COMPLETED!");
+			stmnt.close();
 			super.close();
-			
 		} catch (SQLException e) {
 			System.out.println("QUERY FAILED: " + e.getMessage());
 		}
 		
 	}
 
+	@Override
+	public void readAll() {
+		try {
+			super.open();
+			stmnt = conn.createStatement();
+			ResultSet results = stmnt.executeQuery(
+					"SELECT * FROM CLASSES;");
+			
+			while(results.next()) {
+				String classe = String.format(
+						  "ID: %s"
+						+ " | CLASS NAME: %s"
+						+ " | SCHOOL SUBJECT: %s"
+						+ " | STUDENT(ID): %s"
+						+ " | TEACHER(ID): %s"
+						, 
+						(results.getString(1)),
+						(results.getString(2)),
+						(results.getString(3)),
+						(results.getString(4)),
+						(results.getString(5))
+						);
+				System.out.println(classe);
+			}
+			
+			stmnt.close();
+			super.close();
+		} catch (SQLException e) {
+			System.out.println("QUERY FAILED: " + e.getMessage());
+		}
+		
+	}
 	
 }

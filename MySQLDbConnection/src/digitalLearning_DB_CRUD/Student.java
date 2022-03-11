@@ -16,7 +16,6 @@ public class Student extends Datasource implements CRUD_METHODS {
 			stmnt = conn.createStatement();
 			ResultSet results = stmnt.executeQuery("SELECT * FROM STUDENTS WHERE id = " + id + ";");
 			
-			// FORMAT WAY
 			while (results.next()) {
 				String student = String.format(
 						"ID: %s"
@@ -35,9 +34,10 @@ public class Student extends Datasource implements CRUD_METHODS {
 						);
 					System.out.println(student); // print all the student String
 			}
-
-			super.close();
 			
+			results.close();
+			stmnt.close();
+			super.close();
 		} catch (SQLException e) {
 			System.out.println("QUERY FAILED: " + e.getMessage());
 		}
@@ -108,7 +108,7 @@ public class Student extends Datasource implements CRUD_METHODS {
 					+ "', '" + taxCode.toUpperCase()
 					+ "')");
 			System.out.println("\n>>> INSERT COMPLETED!!!");
-			
+			stmnt.close();
 			super.close();
 		} catch (SQLException e) {
 			System.out.println("QUERY FAILED: " + e.getMessage());
@@ -183,11 +183,11 @@ public class Student extends Datasource implements CRUD_METHODS {
 					+ "sex = '" + sex + "', "
 					+ "dateofbirth = '" + dateOfBirth + "', "
 					+ "taxcode = '" + taxCode + "' "
-					+ "where id = " + id + " is not null;"
+					+ "where id = " + id + ";"
 					);
 			
 			System.out.println("UPDATE COMPLETED!");
-			
+			stmnt.close();
 			super.close();
 		} catch (SQLException e) {
 			System.out.println("QUERY FAILED: " + e.getMessage());
@@ -203,11 +203,48 @@ public class Student extends Datasource implements CRUD_METHODS {
 			stmnt = conn.createStatement();
 			stmnt.execute("DELETE FROM students where id = " + id + ";");
 			System.out.println("DELETE COMPLETED!!!");
+			stmnt.close();
 			super.close();
 		} catch (SQLException e) {
 			System.out.println("QUERY FAILED: " + e.getMessage());
 		}
 
+	}
+	
+	@Override
+	public void readAll() {
+		
+		try {
+			super.open();
+			stmnt = conn.createStatement();
+			ResultSet results = stmnt.executeQuery("SELECT * FROM STUDENTS;");
+			
+			// FORMAT WAY
+			while (results.next()) {
+				String student = String.format(
+						  "ID: %s"
+						+ " | NAME: %s"
+						+ " | LASTNAME: %s"
+						+ " | SEX: %s"
+						+ " | DATE OF BIRTH: %s"
+						+ " | TAX CODE: %s"
+						,
+						(results.getString(1)), // get value from db first column, in this case ID
+						(results.getString(2)),
+						(results.getString(3)),
+						(results.getString(4)),
+						(results.getString(5)),
+						(results.getString(6))
+						);
+					System.out.println(student); // print all the student String
+			}
+			
+			results.close();
+			stmnt.close();
+			super.close();
+		} catch (SQLException e) {
+			System.out.println("QUERY FAILED: " + e.getMessage());
+		}
 	}
 
 }
