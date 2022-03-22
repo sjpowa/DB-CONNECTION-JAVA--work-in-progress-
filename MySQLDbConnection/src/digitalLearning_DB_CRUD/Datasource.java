@@ -10,10 +10,10 @@ public class Datasource {
 	private static final String CONNECTION_URL =
 			"jdbc:mysql://localhost:3306/DigitalLearning";
 			
-	protected Connection conn;
-	protected Statement stmnt;
+	protected static Connection conn;
+	protected static Statement stmnt;
 	
-	public boolean open() {
+	public static boolean open() {
 		
 		try {
 			conn = DriverManager.getConnection(CONNECTION_URL, "root", "root");
@@ -26,7 +26,7 @@ public class Datasource {
 		
 	}
 	
-	public void close() {
+	public static void close() {
 		try {
 			if (conn != null) {
 				conn.close();

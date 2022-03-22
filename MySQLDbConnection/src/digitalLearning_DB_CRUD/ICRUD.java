@@ -1,6 +1,6 @@
 package digitalLearning_DB_CRUD;
 
-public interface CRUD_METHODS {
+public interface ICRUD {
 
 	void search(int id);
 	void insert();

@@ -4,9 +4,10 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Scanner;
 
-public class Classe extends Datasource implements CRUD_METHODS{
+public class Classe extends Datasource implements ICRUD{
 
 	private Scanner sc = new Scanner(System.in);
+	private Scanner int_sc = new Scanner(System.in);
 	
 	@Override
 	public void search(int id) {
@@ -50,13 +51,13 @@ public class Classe extends Datasource implements CRUD_METHODS{
 			stmnt = conn.createStatement();
 			
 			System.out.print("ENTER CLASS NAME: ");
-			String name = sc.next();
+			String name = sc.nextLine();
 			System.out.print("ENTER SCHOOL_SUBJECT OF THIS CLASS: ");
-			String schoolSubject = sc.next();
+			String schoolSubject = sc.nextLine();
 			System.out.print("ENTER STUDENT_ID: ");
-			int studentID = sc.nextInt();
+			int studentID = int_sc.nextInt();
 			System.out.print("ENTER TEACHER_ID: ");
-			int teacherID = sc.nextInt();
+			int teacherID = int_sc.nextInt();
 			
 			stmnt.execute(
 					"INSERT INTO CLASSES"
@@ -84,17 +85,17 @@ public class Classe extends Datasource implements CRUD_METHODS{
 			stmnt = conn.createStatement();
 			
 			System.out.print("ENTER ID OF THE CLASS THAT U WANT TO UPDATE: ");
-			int id = sc.nextInt();
+			int id = int_sc.nextInt();
 			System.out.print("ENTER CLASS NAME: ");
-			String name = sc.next();
+			String name = sc.nextLine();
 			System.out.print("ENTER SCHOOL_SUBJECT OF THIS CLASS: ");
-			String schoolSubject = sc.next();
+			String schoolSubject = sc.nextLine();
 			System.out.print("ENTER STUDENT_ID: ");
-			int studentID = sc.nextInt();
+			int studentID = int_sc.nextInt();
 			System.out.print("ENTER TEACHER_ID: ");
-			int teacherID = sc.nextInt();
+			int teacherID = int_sc.nextInt();
 			
-			stmnt.execute("UPDATE CLASSES"
+			int rowCounter = stmnt.executeUpdate("UPDATE CLASSES"
 					+ " SET name = '" + name
 					+ "', schoolSubject = '" + schoolSubject
 					+ "', studentID = " + studentID
@@ -102,8 +103,10 @@ public class Classe extends Datasource implements CRUD_METHODS{
 					+ " WHERE id = " + id
 					+ ";"
 					);
-			
-			System.out.println("\nUPDATE COMPLETED!");
+			if(rowCounter > 0)
+				System.out.println("\nUPDATE COMPLETED!");
+			else
+				System.out.println("\nWRONG..\nClass not found with this [ID].");
 			stmnt.close();
 			super.close();
 		} catch (SQLException e) {
@@ -118,9 +121,12 @@ public class Classe extends Datasource implements CRUD_METHODS{
 			super.open();
 			stmnt = conn.createStatement();
 			
-			stmnt.execute("DELETE FROM CLASSES WHERE id = " + id);
+			int rowCounter = stmnt.executeUpdate("DELETE FROM CLASSES WHERE id = " + id);
 			
-			System.out.println(">>> DELETE COMPLETED!");
+			if(rowCounter > 0)
+				System.out.println(">>> DELETE COMPLETED!");
+			else
+				System.out.println("Class not found with this [ID].");
 			stmnt.close();
 			super.close();
 		} catch (SQLException e) {
